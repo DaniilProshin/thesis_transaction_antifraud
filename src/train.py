@@ -279,7 +279,7 @@ def cli():
         command.add_argument(
             "--require-pass",
             action="store_true",
-            help="После записи отчета вернуть код 3 при недостижении критериев",
+            help="После записи отчета вернуть код 3 при недостижении критериев"
         )
     score = cmds.add_parser(
         "score-demo", help="Рассчитать недостающие оценки для демонстрационного набора"
@@ -297,6 +297,7 @@ def cli():
     export.add_argument("--alerts", action="store_true")
     export.add_argument("--out", type=Path, help="По умолчанию CSV направляется в stdout")
     args = parser.parse_args()
+
     path = args.db
     db.initialize(path)
     if args.cmd == "init":
@@ -332,7 +333,7 @@ def cli():
             "models": db.records(
                 path, "SELECT id,train_set,profile_id,created FROM model ORDER BY id"
             ),
-            "evaluations": db.records(path, "SELECT * FROM evaluation ORDER BY id"),
+            "evaluations": db.records(path, "SELECT * FROM evaluation ORDER BY id")
         }
     eval_kind = args.kind in {"acceptance", "metrics", "predictions"}
     if eval_kind != (args.evaluation is not None):
@@ -343,7 +344,7 @@ def cli():
         parser.error("--alerts используется только для queue")
     identifier = args.evaluation if eval_kind else args.model
     table = "evaluation" if eval_kind else "model"
-    db.required(path, f"SELECT id FROM {table} WHERE id=?", (identifier,))
+    db.required(path, f"SELECT id FROM {table} WHERE id=?", (identifier))
     ds = None
     if args.kind in {"queue", "reviews"}:
         ds = db.dataset(path, "demo", args.demo)["id"]
